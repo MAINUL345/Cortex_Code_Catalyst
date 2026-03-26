@@ -1,0 +1,38 @@
+Prompt 1:
+hey i want to make a skill that basically does what my catalyst streamlit app does but through chat. like when someone types start it asks them company name, then database, then schema etc one by one and builds a cortex analyst or cortex search or both. can you make the SKILL.md for this?
+
+Prompt 2:
+wait it also needs to ask warehouse and like a short description of what the company does. and all the objects it creates should be named like CATALYST_COMPANYNAME_WHATEVER so theres no collisions
+
+Prompt 3:
+for the analyst part dont use an llm to write the yaml thats too slow and unreliable. just read the columns from DESCRIBE TABLE and put everything as dimensions, and if its a number column also add a SUM measure for it. keep it simple
+
+Prompt 4:
+hmm how does the yaml actually get into snowflake though? it needs to go on a stage. use put_stream in a stored proc. oh and sometimes the database they pick might be read only like SNOWFLAKE_SAMPLE_DATA so have a fallback that puts the stage in CATALYST_DB.PUBLIC instead
+
+Prompt 5:
+ok now do the search part. it should ask whats the stage name, then list the files in it, only show pdfs and txt and docx and md files, let them pick which ones. then parse them with PARSE_DOCUMENT in layout mode, chunk them at 1500 with 150 overlap, stick it all in a chunks table and create a search service. give me the exact sql for all of it
+
+Prompt 6:
+now the chat part. i need 3 functions basically — one that hits cortex analyst api and runs the sql it gets back and then summarizes the results in english, one that searches the docs and does rag to answer, and one that figures out which one to use. remember we're in a workspace not streamlit so _snowflake wont work
+
+Prompt 7:
+the routing logic is wrong. if they ask about documents it should try search first but if search comes back with nothing useful like "no relevant content found" then just fall back to analyst. and if theres no search service at all it should always go to analyst. dont overthink it
+
+Prompt 8:
+after it finishes building everything it should use cortex complete to come up with like 5 sample questions the user could ask. if that fails for whatever reason just show some generic ones. use snowflake-arctic its cheaper
+
+Prompt 9:
+couple things missing — it should actually run the sql not just show it to me, it should check the database and tables actually exist before trying to build, if something fails give me the error and ask if i want to retry, and once the build is done just go straight into chat mode dont make me click anything
+
+Prompt 10:
+oh also before it starts building show me a summary of everything i entered and ask me to confirm. ive fat fingered table names before and had to redo the whole thing lol
+
+Prompt 11:
+can you add an example conversation at the bottom showing the whole thing start to finish? make it look real with the progress logs and everything. do a combined mode one where they ask a data question and a document question so both paths get shown
+
+Prompt 12:
+last thing — whats the grants needed for all this? put a section for that. also people always forget the cross region inference thing so include that too
+
+Prompt 13:
+actually nvm can you also show what happens when someone types restart? it should just wipe everything and start over from the beginning. and make sure the skill description triggers on stuff like "build a demo" or "set up analyst" not just "cortex code"
