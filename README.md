@@ -29,8 +29,8 @@ Analyst    Search
     └────┬────┘
          │
          ▼
-  Streamlit Chat UI
-  (live URL, deployed inside Snowflake)
+  Cortex Code Chat UI
+  (live URL, inside Snowflake)
   
 If tables → CoCo reads the schema, calls SNOWFLAKE.CORTEX.COMPLETE with a master prompt to auto-generate a Semantic View YAML, runs SYSTEM$CREATE_SEMANTIC_VIEW_FROM_YAML, and wires it to Cortex Analyst. Natural language questions become SQL. SQL becomes answers and charts.
 
